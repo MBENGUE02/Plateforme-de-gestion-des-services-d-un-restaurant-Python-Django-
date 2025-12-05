@@ -1,0 +1,39 @@
+{% extends 'composants/adminbase.html' %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4"> Liste des Commandes</h2>
+
+  <table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Client</th>
+        <th>Total</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for commande in commandes %}
+      <tr>
+        <td>#{{ commande.id }}</td>
+        <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+        <td>{{ commande.utilisateur }}</td>
+        <td>{{ commande.montant_total }} FCFA</td>
+        <td>
+          <span class="badge bg-secondary">{{ commande.statut.libelle }}</span>
+        </td>
+        <td>
+          <a href="{% url 'detail_commande' commande.id %}" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-eye"></i> Voir
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">Aucune commande trouvée.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

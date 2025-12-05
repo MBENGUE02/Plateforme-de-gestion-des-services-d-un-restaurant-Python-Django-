@@ -1,0 +1,62 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+
+{% block title %}Authentification{% endblock %}
+
+{% block content %}
+<section class="hero section dark-background" style="padding-top: 150px; padding-bottom: 50px; min-height: 80vh;">
+  <img src="{% static 'img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+       <h2 data-aos="fade-up" data-aos-delay="100" style="padding-bottom: 40px;">Bienvenue <span>Al Mountakha</span></h2>
+
+        {% if messages %}
+          <div class="alert alert-info text-center">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="text-center mb-4">
+          <a href="?mode=connexion" class="btn btn-outline-secondary me-2 {% if mode == 'connexion' %}active{% endif %}" style="border-radius: 10%; color: rgb(255, 255, 255); background-color: rgb(0, 0, 0); border: 1px solid rgb(228, 165, 83);">Connexion</a>
+          <a href="?mode=inscription" class="btn  {% if mode == 'inscription' %}active{% endif %}"  style="border-radius: 10%; color: rgb(255, 255, 255); background-color: rgb(0, 0, 0); border: 1px solid rgb(228, 165, 83);">Inscription</a>
+        </div>
+
+        <div class="card shadow-lg rounded-4 p-4" style="background: rgba(255, 255, 255, 0.85);">
+          <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            {% if mode == 'connexion' %}
+              {% for field in form_connexion %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button type="submit" name="connexion" class="btn btn-dark w-100">Se connecter</button>
+
+            {% else %}
+              {% for field in form_inscription %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button type="submit" name="inscription" class="btn btn-dark w-100">S'inscrire</button>
+            {% endif %}
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

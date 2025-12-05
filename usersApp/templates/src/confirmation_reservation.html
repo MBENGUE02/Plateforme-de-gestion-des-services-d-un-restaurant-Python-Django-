@@ -1,0 +1,30 @@
+{% extends "composants/base.html" %}
+
+{% block content %}
+<section class="section" style="padding-top: 150px; padding-bottom: 100px;">
+  <div class="container text-center">
+    <h2 class="text-success mb-4">Réservation effectuée avec succès !</h2>
+
+    <p>Merci d'avoir réservé chez nous, {{ reservation.utilisateur.prenom }}.</p>
+
+    <div class="mt-4 text-start d-inline-block text-left">
+      <h4>Détails de la réservation :</h4>
+      <ul class="list-group text-left">
+        <li class="list-group-item"><strong>Date :</strong> {{ reservation.date_reservation }}</li>
+        <li class="list-group-item"><strong>Heure :</strong> {{ reservation.heure }}</li>
+        <li class="list-group-item"><strong>Nombre de places :</strong> {{ reservation.nombre_place }}</li>
+        <li class="list-group-item"><strong>Tables attribuées :</strong>
+          <ul>
+            {% for table in tables %}
+              <li>Table {{ table.numero }} ({{ table.capacite }} places)</li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="list-group-item"><strong>Statut :</strong> {{ reservation.get_statut_display }}</li>
+      </ul>
+    </div>
+    <br>
+    <a href="{% url 'accueil' %}" class="btn btn-primary mt-4">Retour à l'accueil</a>
+  </div>
+</section>
+{% endblock %}

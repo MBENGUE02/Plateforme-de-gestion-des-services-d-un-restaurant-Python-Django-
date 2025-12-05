@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{% block title %} Client acceuil {% endblock %}</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicon supprimé -->
+  <!-- <link href="{% static 'img/favicon.png' %}" rel="icon"> -->
+  <!-- <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body class="starter-page-page">
+
+  <header id="header" class="header fixed-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">modou99mbengue#gmail.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+221 78 579 29 51</span></i>
+        </div>
+        <div class="languages d-none d-md-flex align-items-center">
+          <ul>
+            {% if request.session.utilisateur_id %}
+              <p>Bienvenue, {{ request.session.utilisateur_nom }}   -</p>
+              <a href="{% url 'deconnexion' %}"><strong>Déconnexion</strong></a>
+            {% else %}
+              <a href="{% url 'authentification' %}"> <strong>Connexion</strong> </a>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="#" class="logo d-flex align-items-center me-auto me-xl-0">
+          <h1 class="sitename">Al Mountakha</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'accueil' %}">Acceuil</a></li>
+            <li><a href="{% url 'apropos' %}">A propos</a></li>
+            <li><a href="{% url 'menu_du_jour' %}">Menu</a></li>
+            <li><a href="{% url 'chef' %}">Chefs</a></li>
+            <li><a href="{% url 'galerie' %}">Gallery</a></li>
+            <li><a href="{% url 'accueil' %}#contact">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="btn-book-a-table d-none d-xl-block" href="{% url 'accueil' %}#book-a-table">Reservé</a>
+        <a class="btn-book-a-table d-none d-xl-block" href="{% url 'voir_panier' %}">
+          Panier
+          {% if panier_count and panier_count > 0 %}
+            <span class="badge bg-warning text-dark">{{ panier_count }}</span>
+          {% endif %}
+        </a>
+        
+
+      </div>
+    </div>
+
+  </header>
+
+  <main id="main">
+    
+  {% block content %}
+    
+  {% endblock %}
+  </main>
+
+  <footer id="footer" class="footer">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="#" class="logo d-flex align-items-center">
+            <span class="sitename">AL Mountakha</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Khaira</p>
+            <p>Touba</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>33 000 00 00</span></p>
+            <p><strong>Email:</strong> <span>almountakha@gmail.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>liens utiles</h4>
+          <ul>
+            <li><a href="#hero">Accueil</a></li>
+            <li><a href="#about">A propos de nous</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#"><Address></Address></a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nos Services</h4>
+          <ul>
+            <li><a href="#">Evenment </a></li>
+            <li><a href="#">Programme</a></li>
+            <li><a href="#">Ceremonie</a></li>
+            <li><a href="#">Evenment</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Nos infomations </h4>
+          <p>Inscrivez vous pour recevoire de nouvelles infomations ! merci</p>
+          <form method="post">
+            {% csrf_token %}
+            <div class="newsletter-form">
+              <input type="email" name="email" placeholder="Your Email">
+              <input type="submit" value="Subscribe">
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Al Mountakha</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">modou99mbengue@gmail</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

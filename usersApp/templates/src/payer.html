@@ -1,0 +1,27 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+{% block title %}Notre Équipe - Al Mountakh{% endblock %}
+
+{% block content %}
+
+<!-- Équipe Section -->
+<section id="chefs" class="chefs section">
+
+  <<h1>Résumé de la commande</h1>
+<ul>
+  {% for item in lignes_commande %}
+  <li>{{ item.nom }} - Quantité : {{ item.quantite }} - Prix unitaire : {{ item.prix }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Total : {{ total }} F CFA</h3>
+
+{% if paydunya_invoice_url %}
+  <a href="{{ paydunya_invoice_url }}" target="_blank" class="btn btn-success">Payer maintenant</a>
+{% else %}
+  <p>Impossible de générer le lien de paiement. Merci de réessayer plus tard.</p>
+{% endif %}
+
+</section><!-- /Équipe Section -->
+
+{% endblock %}

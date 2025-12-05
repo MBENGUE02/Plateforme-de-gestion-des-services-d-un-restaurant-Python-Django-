@@ -1,0 +1,149 @@
+{% extends 'composants/adminbase.html' %}
+{% block content %}
+<div class="container mt-5">
+
+  <h2 class="mb-4 text-center fw-bold " > Statistiques Générales</h2>
+
+  <div class="row g-4">
+
+    <!-- CA journalier -->
+    <div class="col-md-6 col-lg-4" >
+      <div class="card shadow-sm border-primary h-100" >
+        <div class="card-header  text-white fw-bold" style="background-color: rgb(13, 12, 12);" >
+           Chiffre d'affaires journalier
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for vente in ventes_journalieres %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ vente.jour|date:"d/m/Y" }}</span>
+              <span class="badge bg-success fs-6">{{ vente.total }} FCFA</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">Aucune vente</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- CA hebdomadaire -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm border-info h-100">
+        <div class="card-header text-white fw-bold" style="background-color: rgb(13, 12, 12);">
+           Chiffre d'affaires hebdomadaire
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for vente in ventes_hebdomadaires %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Semaine du {{ vente.semaine|date:"d/m/Y" }}</span>
+              <span class="badge bg-success fs-6">{{ vente.total }} FCFA</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">Aucune vente</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- CA mensuel -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm border-warning h-100">
+        <div class="card-header text-white fw-bold" style="background-color: rgb(13, 12, 12);">
+           Chiffre d'affaires mensuel
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for vente in ventes_mensuelles %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ vente.mois|date:"F Y" }}</span>
+              <span class="badge bg-success fs-6">{{ vente.total }} FCFA</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">Aucune vente</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Plats populaires -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm border-success h-100">
+        <div class="card-header text-white fw-bold" style="background-color: rgb(13, 12, 12);">
+           Plats les plus populaires
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-striped table-hover m-0">
+            <thead class="table-light">
+              <tr>
+                <th>Plat</th>
+                <th class="text-center">Quantité</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for plat in plats_populaires %}
+                <tr>
+                  <td>{{ plat.plat__libelle }}</td>
+                  <td class="text-center fw-bold">{{ plat.qte_totale }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="2" class="text-center text-muted">Aucun plat commandé</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiques clients -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm border-secondary h-100">
+        <div class="card-header text-white fw-bold" style="background-color: rgb(13, 12, 12);">
+           Statistiques clients
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Nombre total de clients
+              <span class="badge bg-primary rounded-pill">{{ total_clients }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Clients actifs ce mois
+              <span class="badge bg-success rounded-pill">{{ clients_actifs }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Nouveaux clients cette semaine
+              <span class="badge bg-info rounded-pill">{{ nouveaux_clients }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiques employés -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm border-dark h-100">
+        <div class="card-header text-white fw-bold" style="background-color: rgb(13, 12, 12);">
+           Statistiques employés
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Nombre total d'employés
+              <span class="badge bg-warning text-dark rounded-pill">{{ total_employes }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Employés présents aujourd'hui
+              <span class="badge bg-success rounded-pill">{{ employes_present }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Employés en congé
+              <span class="badge bg-danger rounded-pill">{{ employes_conge }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

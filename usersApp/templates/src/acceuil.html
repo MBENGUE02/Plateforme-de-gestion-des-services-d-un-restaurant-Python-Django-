@@ -1,0 +1,135 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+{% block title %} sante {% endblock %} 
+
+{% block content %}
+<section id="hero" class="hero section dark-background">
+
+  <img src="{% static 'img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 d-flex flex-column align-items-center align-items-lg-start">
+        <h2 data-aos="fade-up" data-aos-delay="100">Bienvenue <span>Al Mountakha</span></h2>
+        <p data-aos="fade-up" data-aos-delay="200">Nous servons une cuisine de qualité !</p>
+        <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
+          <a href="{% url 'menu_du_jour' %}" class="cta-btn">Nos Menu</a>
+          <a href="#book-a-table" class="cta-btn">Resever une Table</a>
+          <a href="{% url 'historique_utilisateur' %}" class="cta-btn">Historiques</a>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex align-items-center justify-content-center mt-5 mt-lg-0">
+        <a href="https://youtu.be/rCBwnS8_xBo" class="glightbox pulsating-play-btn"></a>
+      </div>
+    </div>
+  </div>
+
+</section>
+<section id="book-a-table" class="book-a-table section">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Réservation</h2>
+    <p>Réservez une table</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    {% if error %}
+      <div class="alert alert-danger text-center mt-3">{{ error }}</div>
+    {% endif %}
+
+    <form action="{% url 'reserver_table' %}" method="POST" class="php-email-form">
+      {% csrf_token %}
+      <div class="row gy-4">
+        <div class="col-lg-4 form-group">
+          <label for="date_reservation">Date</label>
+          <input type="date" name="date_reservation" class="form-control" required min="{{ today|date:'Y-m-d' }}">
+        </div>
+
+        <div class="col-lg-4 form-group">
+          <label for="heure">Heure</label>
+          <input type="time" name="heure" class="form-control" required>
+        </div>
+
+        <div class="col-lg-4 form-group">
+          <label for="nombre_place">Nombre de places</label>
+          <input type="number" name="nombre_place" class="form-control" min="1" max="50" required>
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="submit">Réserver</button>
+      </div>
+    </form>
+  </div>
+</section>
+ <!-- Contact Section -->
+<section id="contact" class="contact section" style="background-color: rgb(11, 11, 11);">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Contact</h2>
+    <p>Contactez-nous</p>
+  </div>
+  <!-- End Section Title -->
+
+  <!-- Google Maps Dakar -->
+  <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
+    <iframe
+      style="border:0; width: 100%; height: 400px;"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7711.020120646019!2d-17.445183396420248!3d14.692348877638485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xec172ecdf269a4f%3A0x23a6c2ac0143a3e9!2sDakar!5e0!3m2!1sfr!2ssn!4v1721929636614!5m2!1sfr!2ssn"
+      frameborder="0"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+  <!-- End Google Maps -->
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4">
+
+      <!-- Infos de contact -->
+      <div class="col-lg-4">
+
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+          <i class="bi bi-geo-alt flex-shrink-0"></i>
+          <div>
+            <h3>Localisation</h3>
+            <p>Avenue Cheikh Anta Diop, Dakar, Sénégal</p>
+          </div>
+        </div>
+
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+          <i class="bi bi-clock flex-shrink-0"></i>
+          <div>
+            <h3>Heures d'ouverture</h3>
+            <p>Lundi - Samedi :<br>08:00 - 23:00</p>
+          </div>
+        </div>
+
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
+          <i class="bi bi-telephone flex-shrink-0"></i>
+          <div>
+            <h3>Appelez-nous</h3>
+            <p>+33 611 45 47</p>
+          </div>
+        </div>
+
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="600">
+          <i class="bi bi-envelope flex-shrink-0"></i>
+          <div>
+            <h3>Email</h3>
+            <p>almountakh@gmai.com</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- Fin Infos de contact -->
+
+    </div>
+  </div>
+
+</section>
+
+
+{% endblock %}

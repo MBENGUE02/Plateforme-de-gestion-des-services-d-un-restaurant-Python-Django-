@@ -1,0 +1,110 @@
+{% extends 'composants/employebase.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Bienvenue {{ utilisateur.prenom }} </h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- tâches du jour -->
+  <h4 class="mt-4"> Vos tâches du jour</h4>
+  <ul class="list-group mb-4">
+    {% for tache in taches %}
+      <li class="list-group-item">
+        <strong>{{ tache.date|date:"d/m/Y" }}:</strong>
+        {{ tache.description }} de {{ tache.heure_debut }} à {{ tache.heure_fin }}
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">Aucune tâche prévue pour aujourd'hui.</li>
+    {% endfor %}
+  </ul>
+
+  {% if est_cuisinier %}
+    <!-- Section CUISINIER -->
+    <h4 class="mt-5"> Menu du jour</h4>
+    <div class="row">
+      {% for plat in menu_du_jour.plats.all %}
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ plat.libelle }}</h5>
+              <p class="card-text">{{ plat.description }}</p>
+              <p class="card-text">Prix : {{ plat.prix }} FCFA</p>
+              <form method="post" action="{% url 'toggle_dispo_plat' plat.id %}">
+                {% csrf_token %}
+                {% if plat.est_epuise %}
+                  <button class="btn btn-sm btn-success"> Rendre disponible</button>
+                {% else %}
+                  <button class="btn btn-sm btn-danger"> Marquer comme épuisé</button>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <h4 class="mt-5"> Commandes en cours</h4>
+    <ul class="list-group">
+      {% for commande in commandes %}
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>Commande #{{ commande.id }}</strong> - {{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }} <br>
+               {{ commande.date_commande|date:"d/m/Y à H:i" }}<br>
+              <span class="badge bg-warning text-dark">{{ commande.statut.libelle }}</span>
+              <ul class="mt-2">
+                {% for ligne in commande.lignes.all %}
+                  <li>{{ ligne.quantite }} x {{ ligne.plat.libelle }} ({{ ligne.prix_unitaire }} FCFA)</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <form method="post" action="{% url 'marquer_commande_prete' commande.id %}">
+              {% csrf_token %}
+              <button class="btn btn-warning btn-sm">🍽️ Marquer comme PRÊTE</button>
+            </form>
+          </div>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">Aucune commande en attente.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if est_serveur %}
+    <!--  Section SERVEUR -->
+    <h4 class="mt-5"> Commandes prêtes à servir</h4>
+    <ul class="list-group">
+      {% for commande in commandes %}
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>Commande #{{ commande.id }}</strong> - Client : {{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }} <br>
+              🕒 {{ commande.date_commande|date:"d/m/Y à H:i" }}<br>
+              <span class="badge bg-info text-dark">{{ commande.statut.libelle }}</span>
+              <ul class="mt-2">
+                {% for ligne in commande.lignes.all %}
+                  <li>{{ ligne.quantite }} x {{ ligne.plat.libelle }} ({{ ligne.prix_unitaire }} FCFA)</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <form method="post" action="{% url 'marquer_commande_servie' commande.id %}">
+              {% csrf_token %}
+              <button class="btn btn-success btn-sm">✅ Marquer comme SERVIE</button>
+            </form>
+          </div>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">Aucune commande prête à servir pour le moment.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

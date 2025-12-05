@@ -1,0 +1,158 @@
+<!-- templates/src/employe.html -->
+{% extends "composants/adminbase.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Gestion des Employés{% endblock %}
+
+{% block content %}
+<h2>Gestion des Employés</h2>
+
+<!-- Formulaire de recherche -->
+<form method="get" class="mb-3 w-50">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Rechercher un utilisateur..." class="form-control" />
+  <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+</form>
+
+<div class="mb-3">
+  <button id="btn-add" class="btn btn-success">Ajouter un Employé</button>
+</div>
+
+<!-- Formulaire caché par défaut -->
+<div id="form-container" style="display: none;">
+  <h3 id="form-title">Ajouter un Employé</h3>
+
+  <form method="post" class="mb-5">
+    {% csrf_token %}
+
+    <!-- Champ caché pour l'édition -->
+    <input type="hidden" name="employe_id" id="employe_id" value="">
+
+    <div class="container">
+      <div class="mb-3">
+        <label for="id_nom" class="form-label">Nom</label>
+        {{ utilisateur_form.nom|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_prenom" class="form-label">Prénom</label>
+        {{ utilisateur_form.prenom|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_login" class="form-label">Login</label>
+        {{ utilisateur_form.login|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_password" class="form-label">Mot de passe</label>
+        {{ utilisateur_form.password|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_telephone" class="form-label">Téléphone</label>
+        {{ utilisateur_form.telephone|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_mail" class="form-label">Email</label>
+        {{ utilisateur_form.mail|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_type_utilisateur" class="form-label">Type</label>
+        {{ utilisateur_form.type_utilisateur|add_class:"form-select" }}
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" name="submit_utilisateur" class="btn btn-primary">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<hr>
+
+<h3 class="mt-4">Liste des Employés</h3>
+<table class="table table-bordered table-hover mt-3">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>Nom complet</th>
+      <th>Login</th>
+      <th>Téléphone</th>
+      <th>Email</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for emp in employes %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ emp.prenom }} {{ emp.nom }}</td>
+        <td>{{ emp.login }}</td>
+        <td>{{ emp.telephone|default:"-" }}</td>
+        <td>{{ emp.mail|default:"-" }}</td>
+        <td>{{ emp.type_utilisateur.libelle }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning btn-edit"
+                  data-id="{{ emp.id }}"
+                  data-nom="{{ emp.nom }}"
+                  data-prenom="{{ emp.prenom }}"
+                  data-login="{{ emp.login }}"
+                  data-telephone="{{ emp.telephone }}"
+                  data-mail="{{ emp.mail }}"
+                  data-type="{{ emp.type_utilisateur.id }}">
+            Modifier
+          </button>
+          <a href="?delete_employe={{ emp.id }}" class="btn btn-sm btn-danger"
+             onclick="return confirm('Voulez-vous vraiment supprimer cet employé ?')">Supprimer</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="7" class="text-center">Aucun employé enregistré.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  const btnAdd = document.getElementById('btn-add');
+  const formContainer = document.getElementById('form-container');
+  const formTitle = document.getElementById('form-title');
+  const form = formContainer.querySelector('form');
+
+  // Cacher formulaire au chargement
+  formContainer.style.display = 'none';
+
+  btnAdd.addEventListener('click', () => {
+    formTitle.textContent = 'Ajouter un Employé';
+    form.reset();
+    document.getElementById('employe_id').value = '';
+    formContainer.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      formTitle.textContent = 'Modifier un Employé';
+
+      // Remplir champs du formulaire
+      document.getElementById('employe_id').value = btn.dataset.id || '';
+      form.elements['nom'].value = btn.dataset.nom || '';
+      form.elements['prenom'].value = btn.dataset.prenom || '';
+      form.elements['login'].value = btn.dataset.login || '';
+      form.elements['telephone'].value = btn.dataset.telephone || '';
+      form.elements['mail'].value = btn.dataset.mail || '';
+      form.elements['type_utilisateur'].value = btn.dataset.type || '';
+
+      formContainer.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+{% endblock %}

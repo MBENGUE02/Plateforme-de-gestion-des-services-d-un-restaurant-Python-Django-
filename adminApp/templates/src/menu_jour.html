@@ -1,0 +1,113 @@
+{% extends "composants/adminbase.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Gestion des Menus du Jour</h2>
+
+  <!-- Bouton Ajouter -->
+  <div class="mb-3">
+    <button id="btn-add" class="btn btn-success">Ajouter un menu du jour</button>
+  </div>
+
+  <!-- Formulaire caché -->
+  <div id="form-container" style="display: none;">
+    <form method="post" id="menu-form" class="mb-4">
+      {% csrf_token %}
+      <input type="hidden" name="menu_id" id="menu_id" value="">
+
+      <div class="mb-3">
+        {{ form.date.label_tag }}
+        {{ form.date|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.plats.label_tag }}
+        {{ form.plats|add_class:"form-select" }}
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">Ajouter</button>
+      <button type="button" id="btn-cancel" class="btn btn-secondary ms-2">Annuler</button>
+    </form>
+  </div>
+
+  <!-- Tableau des Menus du jour -->
+  <h4>Liste des Menus</h4>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Plats</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for menu in menus_jour %}
+        <tr>
+          <td>{{ menu.date }}</td>
+          <td>
+            <ul class="mb-0">
+              {% for plat in menu.plats.all %}
+                <li>{{ plat.libelle }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-warning btn-edit"
+              data-id="{{ menu.id }}"
+              data-date="{{ menu.date }}"
+              data-plats="{{ menu.plats.all|join:',' }}">
+              Modifier
+            </button>
+            <a href="?delete_menu={{ menu.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce menu ?')">Supprimer</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3" class="text-center text-muted">Aucun menu disponible</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const btnAdd = document.getElementById('btn-add');
+  const formContainer = document.getElementById('form-container');
+  const menuForm = document.getElementById('menu-form');
+  const cancelBtn = document.getElementById('btn-cancel');
+  const submitBtn = document.getElementById('submit-btn');
+  const menuIdInput = document.getElementById('menu_id');
+
+  function resetForm() {
+    menuForm.reset();
+    menuIdInput.value = '';
+    submitBtn.textContent = 'Ajouter';
+  }
+
+  btnAdd.addEventListener('click', () => {
+    resetForm();
+    formContainer.style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    formContainer.style.display = 'none';
+    resetForm();
+  });
+
+  document.querySelectorAll('.btn-edit').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.dataset.id;
+      const date = button.dataset.date;
+      // Pour les plats, ici tu dois adapter en JavaScript selon ton widget d'affichage.
+      // Tu peux le remplir avec JavaScript si c'est un select multiple.
+
+      menuIdInput.value = id;
+      menuForm.elements['date'].value = date;
+      submitBtn.textContent = 'Mettre à jour';
+      formContainer.style.display = 'block';
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+</script>
+{% endblock %}

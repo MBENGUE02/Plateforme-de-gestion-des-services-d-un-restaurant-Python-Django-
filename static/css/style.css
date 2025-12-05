@@ -1,0 +1,86 @@
+body {
+      background-color: #f5f7fa;
+    }
+    .sidebar {
+      height: 100vh;
+      background: #2c3e50;
+      color: white;
+      position: fixed;
+      width: 240px;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+    }
+    .sidebar a {
+      color: #ecf0f1;
+      text-decoration: none;
+      padding: 15px;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      background: #34495e;
+    }
+    .sidebar .logo {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 30px;
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card .card-body {
+      padding: 30px;
+    }
+    .card i {
+      font-size: 40px;
+    }
+
+    #main-content {
+        margin-left: 250px; /* même largeur que la sidebar */
+        padding: 20px; /* optionnel, pour respirer */
+    }
+
+    .auth-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .auth-card label {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .auth-card input,
+  .auth-card select {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+  }
+
+  .auth-card input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .auth-card .form-control:focus {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    border-color: #28a745;
+  }
+
+  .auth-btn {
+    border-radius: 50px;
+    font-weight: bold;
+  }
+

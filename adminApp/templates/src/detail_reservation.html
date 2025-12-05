@@ -1,0 +1,47 @@
+{% extends 'composants/adminbase.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Détails de la réservation</h2>
+  
+  <p><strong>Utilisateur:</strong> {{ reservation.utilisateur }}</p>
+  <p><strong>Date:</strong> {{ reservation.date_reservation }}</p>
+  <p><strong>Heure:</strong> {{ reservation.heure }}</p>
+  <p><strong>Nombre de places:</strong> {{ reservation.nombre_place }}</p>
+  <p><strong>Statut actuel:</strong> 
+    <span 
+      class="badge 
+        {% if reservation.statut == 'confirmee' %}bg-success
+        {% elif reservation.statut == 'annulee' %}bg-danger
+        {% else %}bg-warning text-dark{% endif %}">
+      {{ reservation.get_statut_display }}
+    </span>
+  </p>
+
+  <!-- 🪑 Tables réservées -->
+  <p><strong>Tables réservées :</strong></p>
+  {% if reservation.tables.all %}
+    <ul>
+      {% for table in reservation.tables.all %}
+        <li>Table {{ table.numero }} - {{ table.capacite }} places</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Aucune table associée.</p>
+  {% endif %}
+
+  <!-- 🔄 Formulaire de modification du statut -->
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="statut">Modifier le statut :</label>
+      <select name="statut" id="statut" class="form-control">
+        <option value="en_attente" {% if reservation.statut == 'en_attente' %}selected{% endif %}>En attente</option>
+        <option value="confirmee" {% if reservation.statut == 'confirmee' %}selected{% endif %}>Confirmée</option>
+        <option value="annulee" {% if reservation.statut == 'annulee' %}selected{% endif %}>Annulée</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success mt-2">Mettre à jour</button>
+    <a href="{% url 'liste_reservations' %}" class="btn btn-secondary mt-2">Retour</a>
+  </form>
+</div>
+{% endblock %}

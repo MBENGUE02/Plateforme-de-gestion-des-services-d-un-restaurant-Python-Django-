@@ -1,0 +1,34 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+{% block title %}Galerie - Al Mountakh{% endblock %}
+
+{% block content %}
+
+<!-- Gallery Section -->
+<section id="gallery" class="gallery section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up" style="padding-top: 200px;">
+    <h2>Galerie</h2>
+    <p>Quelques photos de notre restaurant Al Mountakh</p>
+  </div>
+
+  <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+    <div class="row g-0">
+
+      {% for i in "12345678" %}
+      <div class="col-lg-3 col-md-4">
+        <div class="gallery-item">
+          <a href="{% static 'img/gallery/gallery-'|add:i|add:'.jpg' %}" class="glightbox" data-gallery="images-gallery">
+            <img src="{% static 'img/gallery/gallery-'|add:i|add:'.jpg' %}" alt="Galerie {{ i }}" class="img-fluid" style="height: 180px; object-fit: cover; width: 100%;">
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+</section><!-- /Gallery Section -->
+
+{% endblock %}

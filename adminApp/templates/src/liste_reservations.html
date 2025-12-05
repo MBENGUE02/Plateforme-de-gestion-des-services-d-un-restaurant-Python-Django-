@@ -1,0 +1,30 @@
+{% extends 'composants/adminbase.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Liste des réservations</h2>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Utilisateur</th>
+        <th>Date</th>
+        <th>Heure</th>
+        <th>Places</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reservations %}
+      <tr>
+        <td>{{ r.utilisateur }}</td>
+        <td>{{ r.date_reservation }}</td>
+        <td>{{ r.heure }}</td>
+        <td>{{ r.nombre_place }}</td>
+        <td>{{ r.get_statut_display }}</td>
+        <td><a href="{% url 'detail_reservation' r.id %}" class="btn btn-primary btn-sm">Détails</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

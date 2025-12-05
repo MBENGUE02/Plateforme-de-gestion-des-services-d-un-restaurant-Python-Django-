@@ -1,0 +1,158 @@
+{% extends "composants/adminbase.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Gestion des tâches</h2>
+
+  <!-- Barre de recherche -->
+  <form method="get" class="mb-3 w-50">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Rechercher par personnel ou description" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+  </form>
+
+  <!-- Bouton Ajouter -->
+  <div class="mb-3">
+    <button id="btn-add" class="btn btn-success">Ajouter une tâche</button>
+  </div>
+
+  <!-- Formulaire caché au départ -->
+  <div id="form-container" style="display:none;">
+    <form method="post" id="task-form" class="mb-4">
+      {% csrf_token %}
+      <input type="hidden" name="tache_id" id="tache_id" value="">
+
+      {{ form.non_field_errors }}
+
+      <div class="mb-3">
+        {{ form.personnel.label_tag }}
+        {{ form.personnel|add_class:"form-select" }}
+        {{ form.personnel.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description|add_class:"form-control" }}
+        {{ form.description.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.date.label_tag }}
+        {{ form.date|add_class:"form-control" }}
+        {{ form.date.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.heure_debut.label_tag }}
+        {{ form.heure_debut|add_class:"form-control" }}
+        {{ form.heure_debut.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.heure_fin.label_tag }}
+        {{ form.heure_fin|add_class:"form-control" }}
+        {{ form.heure_fin.errors }}
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">Ajouter</button>
+      <button type="button" id="btn-cancel" class="btn btn-secondary ms-2">Annuler</button>
+    </form>
+  </div>
+
+  <!-- Tableau des tâches -->
+  <h3>Liste des tâches</h3>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Personnel</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Heure début</th>
+        <th>Heure fin</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tache in taches %}
+      <tr>
+        <td>{{ tache.personnel.prenom }} {{ tache.personnel.nom }}</td>
+        <td>{{ tache.description }}</td>
+        <td>{{ tache.date }}</td>
+        <td>{{ tache.heure_debut }}</td>
+        <td>{{ tache.heure_fin }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning btn-edit" 
+            data-id="{{ tache.id }}"
+            data-personnel="{{ tache.personnel.id }}"
+            data-description="{{ tache.description|escapejs }}"
+            data-date="{{ tache.date }}"
+            data-heure_debut="{{ tache.heure_debut }}"
+            data-heure_fin="{{ tache.heure_fin }}">
+            Modifier
+          </button>
+          <a href="?delete_tache={{ tache.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette tâche ?')">Supprimer</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center">Aucune tâche planifiée.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const btnAdd = document.getElementById('btn-add');
+  const formContainer = document.getElementById('form-container');
+  const taskForm = document.getElementById('task-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const cancelBtn = document.getElementById('btn-cancel');
+  const tacheIdInput = document.getElementById('tache_id');
+
+  // Cacher formulaire au départ
+  formContainer.style.display = 'none';
+
+  // Fonction pour réinitialiser le formulaire
+  function resetForm() {
+    taskForm.reset();
+    tacheIdInput.value = '';
+    submitBtn.textContent = 'Ajouter';
+  }
+
+  // Afficher formulaire à l'ajout
+  btnAdd.addEventListener('click', () => {
+    resetForm();
+    formContainer.style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+  // Annuler modification / ajout
+  cancelBtn.addEventListener('click', () => {
+    formContainer.style.display = 'none';
+    resetForm();
+  });
+
+  // Préremplir formulaire au clic modifier
+  document.querySelectorAll('.btn-edit').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.dataset.id;
+      const personnel = button.dataset.personnel;
+      const description = button.dataset.description;
+      const date = button.dataset.date;
+      const heure_debut = button.dataset.heure_debut;
+      const heure_fin = button.dataset.heure_fin;
+
+      tacheIdInput.value = id;
+      taskForm.elements['personnel'].value = personnel;
+      taskForm.elements['description'].value = description;
+      taskForm.elements['date'].value = date;
+      taskForm.elements['heure_debut'].value = heure_debut;
+      taskForm.elements['heure_fin'].value = heure_fin;
+
+      submitBtn.textContent = 'Mettre à jour';
+      formContainer.style.display = 'block';
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "composants/adminbase.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!-- Barre de recherche -->
+  <form method="get" class="mb-3 w-50">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Rechercher un plat..." class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+  </form>
+
+  <!-- Bouton Ajouter -->
+  <div class="mb-3">
+    <button id="btn-add" class="btn btn-success">Ajouter un Plat</button>
+  </div>
+
+  <!-- Formulaire caché au départ -->
+  <div id="form-container" style="display: none;">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4 id="form-title">Ajouter un Plat</h4>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data" id="plat-form">
+          {% csrf_token %}
+          <input type="hidden" name="plat_id" id="plat_id" value="">
+
+          {{ element_menu_form.as_p }}
+
+          <div class="mb-3">
+            <label for="id_images" class="form-label">Images du plat :</label>
+            <input type="file" name="images" id="id_images" multiple class="form-control">
+          </div>
+
+          <button type="submit" class="btn btn-success" id="form-submit-btn">
+            Ajouter
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau des plats -->
+  <div class="card">
+    <div class="card-header">
+      <h4>Liste des Plats</h4>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Libellé</th>
+            <th>Description</th>
+            <th>Prix</th>
+            <th>Images</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for plat in plats %}
+            <tr>
+              <td>{{ plat.libelle }}</td>
+              <td>{{ plat.description }}</td>
+              <td>{{ plat.prix }} F</td>
+              <td>
+                {% with first_image=plat.images.first %}
+                  {% if first_image %}
+                    <img src="{{ first_image.image.url }}" alt="Image du plat" width="60" height="60" class="img-thumbnail">
+                  {% else %}
+                    <span class="text-muted">Aucune</span>
+                  {% endif %}
+                {% endwith %}
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary btn-edit"
+                  data-id="{{ plat.id }}"
+                  data-libelle="{{ plat.libelle }}"
+                  data-description="{{ plat.description }}"
+                  data-prix="{{ plat.prix }}">
+                  Modifier
+                </button>
+                <a href="?delete_plat={{ plat.id }}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Supprimer ce plat ?')">Supprimer</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="text-center">Aucun plat trouvé.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const btnAdd = document.getElementById('btn-add');
+  const formContainer = document.getElementById('form-container');
+  const formTitle = document.getElementById('form-title');
+  const platForm = document.getElementById('plat-form');
+  const platIdInput = document.getElementById('plat_id');
+  const submitBtn = document.getElementById('form-submit-btn');
+
+  // Cacher formulaire au démarrage
+  formContainer.style.display = 'none';
+
+  // Fonction pour réinitialiser le formulaire
+  function resetForm() {
+    platForm.reset();
+    platIdInput.value = '';
+    submitBtn.textContent = 'Ajouter';
+    formTitle.textContent = 'Ajouter un Plat';
+  }
+
+  // Afficher formulaire d'ajout au clic sur Ajouter
+  btnAdd.addEventListener('click', () => {
+    if (formContainer.style.display === 'none') {
+      resetForm();
+      formContainer.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      formContainer.style.display = 'none';
+    }
+  });
+
+  // Gestion clic Modifier
+  document.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      formTitle.textContent = 'Modifier un Plat';
+      submitBtn.textContent = 'Mettre à jour';
+
+      platIdInput.value = btn.dataset.id || '';
+      platForm.elements['libelle'].value = btn.dataset.libelle || '';
+      platForm.elements['description'].value = btn.dataset.description || '';
+      platForm.elements['prix'].value = btn.dataset.prix || '';
+
+      // Reset le champ fichiers (pas de préremplissage possible)
+      platForm.elements['images'].value = '';
+
+      formContainer.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %} title {% endblock%}</title>
+
+  <!-- CSS Vendors -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <style>
+    #main-content {
+        margin-left: 250px; /* même largeur que la sidebar */
+        padding: 20px; /* optionnel, pour respirer */
+    }
+  </style>
+
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" style="background-color: rgb(11, 10, 10);">
+  <div class="logo mb-4">
+    <i class="bi bi-shop"></i> RestoAdmin
+  </div>
+  <a href="{% url 'statistiques' %}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
+  <a href="{% url 'liste_reservations' %}"><i class="bi bi-calendar-event me-2"></i> Réservations</a>
+  <a href="{% url 'gestion_commandes' %}"><i class="bi bi-basket me-2"></i> Commandes</a>
+  <a href="{% url 'liste_employes' %}"><i class="bi bi-person-plus me-2"></i> Ajouter Employé</a>
+  <a href="{% url 'gestion_menu_jour' %}"><i class="bi bi-journal-plus me-2"></i> Ajouter Menu</a>
+  <a href="{% url 'liste_plats' %}"><i class="bi bi-plus-square me-2"></i> Ajouter Plat</a>
+  <a href="{% url 'gestion_taches' %}"><i class="bi bi-list-check me-2"></i> Affecter Tâche</a>
+  <a href="#"><i class="bi bi-gear me-2"></i> Paramètres</a>
+  <hr>
+  <a href="{% url 'deconnexion' %}" class="text-danger"><i class="bi bi-box-arrow-right me-2"></i> Déconnexion</a>
+</div>
+
+<div id="main-content">
+  {% block content %}
+
+  {% endblock %}
+</div>
+
+</body>
+</html>

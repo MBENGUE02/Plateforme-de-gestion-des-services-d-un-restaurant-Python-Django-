@@ -1,0 +1,81 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+{% block title %}Notre Équipe - Al Mountakh{% endblock %}
+
+{% block content %}
+
+<!-- Équipe Section -->
+<section id="chefs" class="chefs section">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up" style="padding-top: 200px;">
+    <h2>Notre Équipe</h2>
+    <p>Découvrez les talents derrière notre cuisine raffinée à Al Mountakh</p>
+  </div>
+
+  <div class="container">
+    <div class="row gy-4">
+
+      <!-- Membre 1 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="member">
+          <img src="{% static 'img/chefs/chef1.jpeg' %}" class="img-fluid" style="height: 400px; object-fit: cover;" alt="Cheikh Ndiaye">
+          <div class="member-info">
+            <div class="member-info-content">
+              <h4>Cheikh Ndiaye</h4>
+              <span>Chef exécutif</span>
+            </div>
+            <div class="social">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Membre 2 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="member">
+          <img src="{% static 'img/chefs/chef2.jpg' %}" class="img-fluid" style="height: 400px; object-fit: cover;" alt="Aminata Sarr">
+          <div class="member-info">
+            <div class="member-info-content">
+              <h4>Aminata Sarr</h4>
+              <span>Pâtissière</span>
+            </div>
+            <div class="social">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Membre 3 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="member">
+          <img src="{% static 'img/chefs/chefs-3.jpg' %}" class="img-fluid" style="height: 400px; object-fit: cover;" alt="William Anderson">
+          <div class="member-info">
+            <div class="member-info-content">
+              <h4>William Anderson</h4>
+              <span>Cuisinier</span>
+            </div>
+            <div class="social">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section><!-- /Équipe Section -->
+
+{% endblock %}

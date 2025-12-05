@@ -1,0 +1,19 @@
+{% extends 'composants/base.html' %}
+{% block title %}Confirmation Commande{% endblock %}
+{% block content %}
+<section class="section" style="padding-top: 150px; padding-bottom: 100px;">
+  <div class="container text-center">
+    <h2 class="text-success mb-4">Votre commande a bien été prise en compte. !</h2>
+    <p>Merci pour votre commande !</p>
+    {% if commande_id %}
+      <a href="{% url 'facture_pdf' commande_id %}" class="btn btn-primary" target="_blank">
+        Télécharger votre facture (PDF)
+      </a>
+    {% else %}
+      <p>Aucune commande trouvée.</p>
+    {% endif %}
+    <br>
+    <a href="{% url 'accueil' %}" class="btn btn-primary mt-4">Retour à l'accueil</a>
+  </div>
+</section>
+{% endblock %}

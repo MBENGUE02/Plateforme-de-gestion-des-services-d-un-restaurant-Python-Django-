@@ -1,0 +1,48 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Espace Employé{% endblock %}</title>
+
+  <!-- CSS -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar {
+      background-color: #343a40;
+    }
+    .navbar-brand, .nav-link, .navbar-text {
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar employé -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(13, 12, 12);">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">🍽️ Resto - Employé</a>
+      <div class="d-flex ms-auto">
+        <span class="navbar-text me-3">
+          Bonjour, {{ utilisateur.prenom }}
+        </span>
+        <a href="{% url 'deconnexion' %}" class="btn btn-outline-light btn-sm">Déconnexion</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenu principal -->
+  <div class="container py-4">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+</body>
+</html>

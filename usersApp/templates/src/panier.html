@@ -1,0 +1,97 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+{% block title %}Votre Panier{% endblock %}
+
+{% block content %}
+<section id="panier" class="py-5" style="padding-top:0px;">
+  <div class="container" style="padding-top: 100px;">
+    <div class="card shadow-lg border-0 rounded-4">
+      <div class="card-body">
+        <h2 class="card-title text-center mb-4 text-primary">Votre Panier</h2>
+
+        {% if articles %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-dark">
+                <tr>
+                    <th>Plat</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
+                    <th>Sous-total</th>
+                    <th>Action</th>  {# 👈 colonne action #}
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in articles %}
+                <tr>
+                    <td><strong>{{ item.plat.libelle }}</strong></td>
+                    <td>{{ item.quantite }}</td>
+                    <td>{{ item.plat.prix }} FCFA</td>
+                    <td><strong>{{ item.sous_total }} FCFA</strong></td>
+                    <td>
+                    <form method="post" action="{% url 'retirer_du_panier' item.plat.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Retirer</button>
+                    </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr class="table-light">
+                  <td colspan="3" class="text-end fw-bold">Total</td>
+                  <td class="fw-bold text-success">{{ total }} FCFA</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <form method="post" action="{% url 'valider_commande' %}" class="text-end mt-4">
+            {% csrf_token %}
+            <!-- Bouton -->
+            <button type="button" class="btn btn-success px-4 py-2" data-bs-toggle="modal" data-bs-target="#paiementModal">
+              Valider la commande
+            </button>
+          </form>
+
+        {% else %}
+          <div class="alert alert-info text-center">
+            Votre panier est actuellement vide. <br>
+            <a href="{% url 'menu_du_jour' %}" class="btn btn-outline-primary mt-3">Voir le menu du jour</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sumulation de paiement -->
+<div class="modal fade" id="paiementModal" tabindex="-1" aria-labelledby="paiementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <form method="post" action="{% url 'valider_commande' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title text-primary" id="paiementModalLabel">Paiement Mobile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="numero" class="form-label">Numéro de téléphone</label>
+            <input type="tel" class="form-control" id="numero" name="numero" placeholder="77 123 45 67" required>
+          </div>
+          <div class="mb-3">
+            <label for="code" class="form-label">Code secret</label>
+            <input type="password" class="form-control" id="code" name="code" placeholder="••••" required>
+          </div>
+          <div class="form-text text-muted">
+            Simulation : Aucune transaction réelle ne sera effectuee.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Payer maintenant</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

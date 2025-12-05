@@ -1,0 +1,128 @@
+{% extends 'composants/base.html' %}
+{% load static %}
+
+{% block title %}Menu du jour{% endblock %}
+
+{% block content %}
+<section id="menu" class="menu section" style="padding-top: 200px; background-color: rgb(12, 12, 12);">
+  <!-- Titre de section -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Menu du {{ date }}</h2>
+    <p>Découvrez nos plats savoureux disponibles aujourd'hui</p>
+  </div>
+
+  <!-- Filtres -->
+  <div class="container isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+    <div class="row" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-12 d-flex justify-content-center">
+        <ul class="menu-filters isotope-filters">
+          <li data-filter="*" class="filter-active"><a href="#">Tous</a></li>
+          <li data-filter=".entre"><a href="#">Entrées</a></li>
+          <li data-filter=".dessert"><a href="#">Desserts</a></li>
+          <li data-filter=".resistant"><a href="#">Résistants</a></li>
+          <li data-filter=".special"><a href="#">Spéciaux</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Affichage dynamique des plats -->
+    <div class="row isotope-container" data-aos="fade-up" data-aos-delay="200">
+      {% for plat in plats %}
+        <div class="col-lg-6 menu-item isotope-item {{ plat.categorie|lower }} {% if plat.specialite_jour %}special{% endif %}">
+          {% if plat.images.first %}
+            <img src="{{ plat.images.first.image.url }}" class="menu-img" alt="{{ plat.libelle }}" style="height: 80px;">
+          {% else %}
+            <img src="{% static 'img/default-plat.jpg' %}" class="menu-img" alt="Image par défaut" style="height: 80px;">
+          {% endif %}
+
+          <div class="menu-content d-flex justify-content-between align-items-center">
+            <a href="#" class="fw-bold">{{ plat.libelle }}</a>
+            <span class="">{{ plat.prix }} FCFA</span>
+          </div>
+
+          <div class="menu-ingredients mb-2">
+            {{ plat.description }}
+          </div>
+
+          {% if plat.est_special %}
+            <div class="mb-2">
+              <span class="badge bg-warning text-dark">⭐ Spécial du Chef</span>
+            </div>
+          {% endif %}
+
+          <!-- Formulaire pour ajouter au panier -->
+          <form method="post" action="{% url 'ajouter_panier' plat.id %}" class="ajout-panier-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="number" name="quantite" value="1" min="1" class="quantite-input">
+              <button type="submit" class="ajouter-btn">Ajouter</button>
+            </div>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+  <style>
+    .ajout-panier-form {
+      text-align: left;
+    }
+
+    .ajout-panier-form .form-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding-left: 50px;
+    }
+
+    .quantite-input {
+      width: 60px;
+      padding: 4px 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .ajouter-btn {
+      background-color: #0d6efd;
+      color: #fff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .ajouter-btn:hover {
+      background-color: #084298;
+    }
+
+    .badge {
+      font-size: 0.8rem;
+    }
+  </style>
+
+  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var grid = document.querySelector('.isotope-container');
+      var iso = new Isotope(grid, {
+        itemSelector: '.isotope-item',
+        layoutMode: 'fitRows'
+      });
+
+      var filters = document.querySelectorAll('.menu-filters li');
+      filters.forEach(function (filter) {
+        filter.addEventListener('click', function () {
+          filters.forEach(el => el.classList.remove('filter-active'));
+          this.classList.add('filter-active');
+          var filterValue = this.getAttribute('data-filter');
+          iso.arrange({ filter: filterValue });
+        });
+      });
+    });
+  </script>
+{% endblock %}

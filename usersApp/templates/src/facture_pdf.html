@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h2 { text-align: center; margin-top: 40px; }
+        .total { text-align: right; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>RESTAURANT AL MOUNTAKHA</h2>
+    <h2>Facture #{{ commande.id }}</h2>
+    
+    <p><strong>Client :</strong> {{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</p>
+    <p><strong>Date :</strong> {{ commande.date_commande|date:"d/m/Y H:i" }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Plat</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in lignes %}
+            <tr>
+                <td>{{ ligne.plat.libelle }}</td>
+                <td>{{ ligne.quantite }}</td>
+                <td>{{ ligne.prix_unitaire }} FCFA</td>
+                <td>{{ ligne.quantite|floatformat:0|add:""|floatformat:2|floatformat }} FCFA</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Montant total : {{ commande.montant_total }} FCFA</p>
+</body>
+</html>
